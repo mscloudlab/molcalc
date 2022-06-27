@@ -42,7 +42,7 @@ def calculation_pipeline(molinfo, settings):
     # Start respond message
     msg = {"smiles": smiles, "hashkey": hashkey}
 
-    atoms = chembridge.molobj_to_atoms(molobj)
+    atoms = chembridge.get_atoms(molobj)
     _logger.info(f"{hashkey} '{smiles}' {atoms}")
 
     # Create new calculation

@@ -221,13 +221,15 @@ def ajax_submitquantum(request):
     add_hydrogens = add_hydrogens == "1"
 
     # Get rdkit
-    molobj, status = chembridge.sdfstr_to_molobj(sdfstr, return_status=True)
+    # molobj, status = chembridge.sdfstr_to_molobj(sdfstr, return_status=True)
+    molobj = chembridge.sdfstr_to_molobj(sdfstr)
 
     if molobj is None:
-        status = status.split("]")
-        status = status[-1]
-        status = re.sub(r"\# [0-9]+", "", status)
-        return {"error": "Error 141 - rdkit error", "message": status}
+        # status = status.split("]")
+        # status = status[-1]
+        # status = re.sub(r"\# [0-9]+", "", status)
+        # return {"error": "Error 141 - rdkit error", "message": status}
+        return {"error": "Unclassified RDKit error"}
 
     try:
         molobj.GetConformer()
@@ -242,14 +244,14 @@ def ajax_submitquantum(request):
         }
 
     # If hydrogens not added, assume graph and optimize with forcefield
-    atoms = chembridge.molobj_to_atoms(molobj)
+    atoms = chembridge.get_atoms(molobj)
 
     if 1 not in atoms and add_hydrogens:
         molobj = Chem.AddHs(molobj)
         AllChem.EmbedMultipleConfs(molobj, numConfs=1)
         chembridge.molobj_optimize(molobj)
 
-    atoms = chembridge.molobj_to_atoms(molobj)
+    atoms = chembridge.get_atoms(molobj)
 
     # TODO Check lengths of atoms
     # TODO Define max in settings
