@@ -103,6 +103,11 @@ def test_calculate_all_properties(smiles):
         properties_sol,
     ) = gamess_calculations.calculate_all_properties(molobj, GAMESS_OPTIONS)
 
+    print(80*'*')
+    print(properties_orb)
+    print(80*'*')
+    assert False
+
     assert properties_vib is not None
     assert properties_orb is not None
     assert properties_sol is not None
