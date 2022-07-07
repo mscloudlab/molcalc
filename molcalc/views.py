@@ -12,7 +12,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 from molcalc import constants
-from molcalc_lib import gamess_results
+from molcalc_lib import gamess_results, orca_results
 from ppqm import chembridge
 
 _logger = logging.getLogger("molcalc:views")

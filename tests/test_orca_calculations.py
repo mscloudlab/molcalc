@@ -6,9 +6,8 @@ from context import CONFIG, RESOURCES, SCR
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-import ppqm
+from ppqm import chembridge, orca, tasks, units
 from molcalc_lib import orca_calculations
-from ppqm import chembridge
 
 ORCA_OPTIONS = {
     "scr": SCR,
@@ -20,6 +19,11 @@ TEST_SMILES = ["C"]
 
 TEST_SMILES_COORD = [
     ("CCC", -23.62341),
+]
+TEST_ENERGIES_PM3 = [
+    ("O", -11.935809225486 * units.hartree_to_kcalmol),
+    ("CC", -12.124869353328 * units.hartree_to_kcalmol),
+    ("[NH4+]", -7.972867788142 * units.hartree_to_kcalmol),
 ]
 
 TEST_ERROR_SDF = ["wrong_methane.sdf", "wrong_benzene.sdf"]
@@ -43,32 +47,26 @@ def _prepare_molobj(smiles):
     return mol
 
 
-@pytest.mark.parametrize("smiles, test_energy", TEST_SMILES_COORD)
+@pytest.mark.parametrize("smiles, test_energy", TEST_ENERGIES_PM3)
 def test_optimize_coordinates(smiles, test_energy):
 
-    molobj = _prepare_molobj(smiles)
+    # molobj = _prepare_molobj(smiles)
+    # The two lines below replace the line above
+    molobj = chembridge.smiles_to_molobj(smiles)
+    molobj = tasks.generate_conformers(molobj, n_conformers=1)
+
+    assert molobj is not None
     properties = orca_calculations.optimize_coordinates(
         molobj, ORCA_OPTIONS
     )
 
-    assert properties[ppqm.constants.COLUMN_ENERGY] == pytest.approx(
-        test_energy
+    print('\n' + 80*'*')
+    print(properties)
+    print(80*'*')
+    assert properties[orca.COLUMN_SCF_ENERGY] == pytest.approx(
+        test_energy,
+        1.0e-7 #2.0e-3
     )
-
-
-@pytest.mark.parametrize("smiles", TEST_SMILES_SOLVATION)
-def test_calculate_solvation(smiles):
-    pass
-
-
-@pytest.mark.parametrize("smiles", TEST_SMILES)
-def test_calculate_all_properties(smiles):
-    pass
-
-
-@pytest.mark.parametrize("filename", TEST_ERROR_SDF)
-def test_error_smiles(tmpdir, filename):
-    pass
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 import ppqm
-from molcalc_lib import gamess_calculations
+from molcalc_lib import gamess_calculations, orca_calculations
 from ppqm import chembridge
 
 GAMESS_OPTIONS = {
@@ -14,8 +14,31 @@ GAMESS_OPTIONS = {
     "gamess_userscr": CONFIG["gamess"].get("userscr"),
 }
 
+ORCA_OPTIONS = {
+    "scr": SCR,
+    "cmd": CONFIG["orca"]["cmd"],
+}
 
 SMALL_SMILES = ["[O-2]", "[H-]", "[H][H]", "N#N", "[C]"]
+
+
+@pytest.mark.parametrize("smi", SMALL_SMILES)
+def test_small_smiles_orca(smi):
+    molobj = chembridge.smiles_to_molobj(smi)
+
+    n_atoms = len(molobj.GetAtoms())
+
+    assert n_atoms > 0
+
+    AllChem.Compute2DCoords(molobj)
+
+    properties = orca_calculations.optimize_coordinates(
+        molobj, ORCA_OPTIONS
+    )
+    print('\n' + 80*'*')
+    print(properties)
+    print(80*'*')
+    assert ppqm.orca.COLUMN_COORD in properties
 
 
 @pytest.mark.parametrize("smi", SMALL_SMILES)

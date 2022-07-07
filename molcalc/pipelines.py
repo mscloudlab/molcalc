@@ -5,7 +5,7 @@ import pathlib
 import models
 
 import ppqm
-from molcalc_lib import gamess_calculations
+from molcalc_lib import gamess_calculations, orca_calculations
 from ppqm import chembridge, misc
 from ppqm.constants import COLUMN_COORDINATES
 
@@ -60,14 +60,25 @@ def calculation_pipeline(molinfo, settings):
         "filename": hashkey,
     }
 
+    orca_options = gamess_options.copy()
+    orca_options['cmd'] = '/home/cloudlab/Library/orca/4.2.1-static_ompi-3.1.4/orca'
+
     # TODO Add error messages when gamess fails
     # TODO add timeouts for all gamess calls
 
     # Optimize molecule
+    software_to_use = 'orca'
     try:
-        properties = gamess_calculations.optimize_coordinates(
-            molobj, gamess_options
-        )
+        match software_to_use:
+            case 'orca':
+                print('Hello, trying to use Orca!')
+                properties = orca_calculations.optimize_coordinates(
+                    molobj, orca_options
+                )
+            case _:
+                properties = gamess_calculations.optimize_coordinates(
+                    molobj, gamess_options
+                )
 
     except Exception:
         # TODO Logger + rich should store these exceptions somewhere. One file
