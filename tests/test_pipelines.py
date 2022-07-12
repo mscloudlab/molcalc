@@ -24,7 +24,7 @@ def test_pipelines():
     settings["gamess.rungms"] = GAMESS_OPTIONS["cmd"]
     settings["gamess.scr"] = GAMESS_OPTIONS["gamess_scr"]
     settings["gamess.userscr"] = GAMESS_OPTIONS["gamess_userscr"]
-    settings["orca.cmd"] = ORCA_OPTIONS["cmd"]
+    settings["orca_cmd"] = ORCA_OPTIONS["cmd"]
 
     print(settings)
 

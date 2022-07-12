@@ -22,10 +22,10 @@ def optimize_coordinates(molobj, qchem_options, engine='gamess'):
     options_prime = copy.deepcopy(qchem_options)
 
     if engine == 'gamess':
-        options_prime['cmd'] = options_prime['gamess.cmd']
+        options_prime['cmd'] = options_prime['gamess_cmd']
         properties = gamess_calculations.optimize_coordinates(molobj, options_prime)
     elif engine == 'orca':
-        options_prime['cmd'] = options_prime['orca.cmd']
+        options_prime['cmd'] = options_prime['orca_cmd']
         properties = orca_calculations.optimize_coordinates(molobj, options_prime)
     else:
         raise ValueError(f'Error: keyword argument engine = "{engine}" unknown.')
@@ -37,10 +37,10 @@ def calculate_vibrations(molobj, qchem_options, engine='gamess'):
     engine = options_prime.pop('engine', None)
 
     if engine == 'gamess':
-        options_prime['cmd'] = options_prime['gamess.cmd']
+        options_prime['cmd'] = options_prime['gamess_cmd']
         properties = gamess_calculations.calculate_vibrations(molobj, options_prime)
     elif engine == 'orca':
-        options_prime['cmd'] = options_prime['orca.cmd']
+        options_prime['cmd'] = options_prime['orca_cmd']
         properties = orca_calculations.calculate_vibrations(molobj, options_prime)
     else:
         raise ValueError(f'Error: keyword argument engine = "{engine}" unknown.')
@@ -52,7 +52,7 @@ def calculate_orbitals(molobj, qchem_options, engine='gamess'):
     engine = options_prime.pop('engine', None)
 
     if engine == 'gamess':
-        options_prime['cmd'] = options_prime['gamess.cmd']
+        options_prime['cmd'] = options_prime['gamess_cmd']
         properties = gamess_calculations.calculate_orbitals(molobj, options_prime)
     else:
         raise ValueError(f'Error: keyword argument engine = "{engine}" unknown.')
@@ -65,7 +65,7 @@ def calculate_solvation(molobj, qchem_options, engine='gamess'):
     engine = options_prime.pop('engine', None)
 
     if engine == 'gamess':
-        options_prime['cmd'] = options_prime['gamess.cmd']
+        options_prime['cmd'] = options_prime['gamess_cmd']
         properties = gamess_calculations.calculate_solvation(molobj, options_prime)
     else:
         raise ValueError(f'Error: keyword argument engine = "{engine}" unknown.')
@@ -75,7 +75,7 @@ def calculate_solvation(molobj, qchem_options, engine='gamess'):
 
 def calculate_all_properties(molobj, qchem_options):
     engines = {
-        'vibrations': 'orca',
+        'vibrations': 'gamess',
         'orbitals': 'gamess',
         'solvation': 'gamess'
     }

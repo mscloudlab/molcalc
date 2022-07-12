@@ -1,3 +1,4 @@
+import copy
 import datetime
 import logging
 import pathlib
@@ -53,15 +54,15 @@ def calculation_pipeline(molinfo, settings):
     hashdir.mkdir(parents=True, exist_ok=True)
 
     gamess_options = {
-        "gamess.cmd": settings["gamess.rungms"],
+        "gamess_cmd": settings["gamess.rungms"],
         "gamess_scr": settings["gamess.scr"],
         "gamess_userscr": settings["gamess.userscr"],
         "scr": hashdir,
         "filename": hashkey,
     }
 
-    qchem_options = gamess_options.copy()
-    qchem_options['orca.cmd'] = '/home/cloudlab/Library/orca/4.2.1-static_ompi-3.1.4/orca'
+    qchem_options = copy.deepcopy(gamess_options)
+    qchem_options['orca_cmd'] = '/home/cloudlab/Library/orca/4.2.1-static_ompi-3.1.4/orca'
     qchem_options['cmd'] = None  # specified at runtime based on user selection
 
     # TODO Add error messages when gamess fails
