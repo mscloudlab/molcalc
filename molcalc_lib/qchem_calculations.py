@@ -75,7 +75,7 @@ def calculate_solvation(molobj, qchem_options, engine='gamess'):
 
 def calculate_all_properties(molobj, qchem_options):
     engines = {
-        'vibrations': 'gamess',
+        'vibrations': 'orca',
         'orbitals': 'gamess',
         'solvation': 'gamess'
     }
