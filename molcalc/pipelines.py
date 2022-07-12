@@ -5,7 +5,7 @@ import pathlib
 import models
 
 import ppqm
-from molcalc_lib import gamess_calculations, orca_calculations
+from molcalc_lib import gamess_calculations, qchem_calculations
 from ppqm import chembridge, misc
 from ppqm.constants import COLUMN_COORDINATES
 
@@ -53,33 +53,46 @@ def calculation_pipeline(molinfo, settings):
     hashdir.mkdir(parents=True, exist_ok=True)
 
     gamess_options = {
-        "cmd": settings["gamess.rungms"],
+        "gamess.cmd": settings["gamess.rungms"],
         "gamess_scr": settings["gamess.scr"],
         "gamess_userscr": settings["gamess.userscr"],
         "scr": hashdir,
         "filename": hashkey,
     }
 
-    orca_options = gamess_options.copy()
-    orca_options['cmd'] = '/home/cloudlab/Library/orca/4.2.1-static_ompi-3.1.4/orca'
+    qchem_options = gamess_options.copy()
+    qchem_options['orca.cmd'] = '/home/cloudlab/Library/orca/4.2.1-static_ompi-3.1.4/orca'
+    qchem_options['cmd'] = None  # specified at runtime based on user selection
 
     # TODO Add error messages when gamess fails
     # TODO add timeouts for all gamess calls
 
     # Optimize molecule
-    software_to_use = 'orca'
     try:
-        match software_to_use:
-            case 'orca':
-                print('Hello, trying to use Orca!')
-                properties = orca_calculations.optimize_coordinates(
-                    molobj, orca_options
-                )
-            case _:
-                properties = gamess_calculations.optimize_coordinates(
-                    molobj, gamess_options
-                )
-
+        # software_to_use = 'orca'
+        # match software_to_use:
+        #     case 'orca':
+        #         print('Hello, trying to use Orca!')
+        #         properties = orca_calculations.optimize_coordinates(
+        #             molobj, orca_options
+        #         )
+        #     case _:
+        #         properties = gamess_calculations.optimize_coordinates(
+        #             molobj, gamess_options
+        #         )
+        # orca_properties = orca_calculations.optimize_coordinates(
+        #     molobj, orca_options
+        # )
+        properties = gamess_calculations.optimize_coordinates(
+            molobj, gamess_options
+        )
+        # print('\n'+80*'*')
+        # print('orca_properties:\n\t')
+        # print(orca_properties)
+        # print('\n'+80*'*')
+        # print('properties:\n\t')
+        # print(properties)
+        # print(80*'*')
     except Exception:
         # TODO Logger + rich should store these exceptions somewhere. One file
         # per exception for easy debugging.
@@ -110,7 +123,7 @@ def calculation_pipeline(molinfo, settings):
             "message": "Error. Unable to optimize molecule",
         }, None
 
-    _logger.info(f"{hashkey} OptimizationSucces")
+    _logger.info(f"{hashkey} OptimizationSuccess")
 
     # Save and set coordinates
     coord = properties[ppqm.constants.COLUMN_COORDINATES]
@@ -124,7 +137,11 @@ def calculation_pipeline(molinfo, settings):
         properties_vib,
         properties_orb,
         properties_sol,
-    ) = gamess_calculations.calculate_all_properties(molobj, gamess_options)
+    ) = qchem_calculations.calculate_all_properties(molobj, qchem_options)
+
+    print(80*'*')
+    print('properties_sol:', properties_sol)
+    print(80*'*' + '\n')
 
     # Check results
 

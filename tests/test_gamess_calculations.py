@@ -53,9 +53,6 @@ def test_optimize_coordinates(smiles, test_energy):
         molobj, GAMESS_OPTIONS
     )
 
-    print('\n' + 80*'*')
-    print(properties)
-    print(80*'*')
     assert properties[ppqm.constants.COLUMN_ENERGY] == pytest.approx(
         test_energy
     )

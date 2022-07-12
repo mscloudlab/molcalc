@@ -34,3 +34,20 @@ def optimize_coordinates(molobj, orca_options):
 
     return properties
 
+
+def calculate_vibrations(molobj, orca_options):
+
+    # Vibrate molecule
+    calculation_options = {"pm3": None}
+
+    # Remove GAMESS options that ppqm.orca.OrcaCalculator doesn't expect
+    orca_options.pop('gamess_scr', None)
+    orca_options.pop('gamess_userscr', None)
+    orca_options.pop('method_options', None)
+    options_prime = _get_options(orca_options, '/home/cloudlab/scratch/orca/')
+
+    calc_obj = ppqm.orca.OrcaCalculator(**options_prime)
+    results = calc_obj.calculate(molobj, calculation_options)
+    properties = results[0]
+
+    return properties
