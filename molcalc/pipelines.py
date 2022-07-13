@@ -54,7 +54,7 @@ def calculation_pipeline(molinfo, settings):
     hashdir.mkdir(parents=True, exist_ok=True)
 
     gamess_options = {
-        "gamess_cmd": settings["gamess.rungms"],
+        "cmd": settings["gamess.rungms"],
         "gamess_scr": settings["gamess.scr"],
         "gamess_userscr": settings["gamess.userscr"],
         "scr": hashdir,
@@ -62,8 +62,7 @@ def calculation_pipeline(molinfo, settings):
     }
 
     qchem_options = copy.deepcopy(gamess_options)
-    qchem_options['orca_cmd'] = '/home/cloudlab/Library/orca/4.2.1-static_ompi-3.1.4/orca'
-    qchem_options['cmd'] = None  # specified at runtime based on user selection
+    qchem_options['orca_cmd'] = settings['orca_cmd']
 
     # TODO Add error messages when gamess fails
     # TODO add timeouts for all gamess calls
@@ -140,6 +139,9 @@ def calculation_pipeline(molinfo, settings):
         properties_sol,
     ) = qchem_calculations.calculate_all_properties(molobj, qchem_options)
 
+    print(80*'*')
+    print('properties_vib:', properties_vib)
+    print(80*'*' + '\n')
     print(80*'*')
     print('properties_sol:', properties_sol)
     print(80*'*' + '\n')
