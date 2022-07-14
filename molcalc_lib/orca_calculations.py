@@ -19,7 +19,10 @@ def _get_options(existing_options, tmp_path):
 
 def optimize_coordinates(molobj, orca_options):
 
-    calculation_options = {"pm3": None}
+    calculation_options = {
+        'pm3': None,
+        'NumFreq': None
+    }
 
     # Remove GAMESS options that ppqm.orca.OrcaCalculator doesn't expect
     orca_options.pop('gamess_scr', None)
