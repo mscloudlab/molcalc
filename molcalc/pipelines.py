@@ -140,8 +140,11 @@ def calculation_pipeline(molinfo, settings):
     ) = qchem_calculations.calculate_all_properties(molobj, qchem_options)
 
     print(80*'*')
-    print('properties_vib:', properties_vib)
-    print(80*'*' + '\n')
+    print('properties_vib_orca:', properties_vib[0])
+    print()
+    print('properties_vib_gamess:', properties_vib[1])
+    print(80*'*')
+    print('properties_orb:', properties_orb)
     print(80*'*')
     print('properties_sol:', properties_sol)
     print(80*'*' + '\n')
