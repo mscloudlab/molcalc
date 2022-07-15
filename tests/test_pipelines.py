@@ -46,7 +46,7 @@ M  END """
 
     # NOTE: The string value corresponding to "hashkey" in the molecular_info
     # dictionary will serve as the file/dir prefix used by pipelines.py
-    molecule_info = {"sdfstr": sdf, "molobj": molobj, "hashkey": "TEST"}
+    molecule_info = {"sdfstr": sdf, "molobj": molobj, "hashkey": "TEST_PIPELINES"}
 
     results = pipelines.calculation_pipeline(molecule_info, settings)
 

@@ -52,7 +52,9 @@ def calculate_orbitals(molobj, qchem_options, engine='gamess'):
     options_prime = copy.deepcopy(qchem_options)
     orca_cmd = options_prime.pop('orca_cmd')
     engine = options_prime.pop('engine', None)
-
+    print('\n'+80*'*')
+    print('options_prime:', options_prime)
+    print(80*'*'+'\n')
     if engine == 'gamess':
         properties = gamess_calculations.calculate_orbitals(molobj, options_prime)
     else:
@@ -94,13 +96,14 @@ def calculate_all_properties(molobj, qchem_options):
     procs = []
     conns = []
 
+    filename = qchem_options.pop("filename", "qchem_calc")
+
     for calc in engines.keys():
 
         func = funcs[calc]
         engine = engines[calc]
 
         # Change scr
-        filename = qchem_options.get("filename", "qchem_calc")
         qchem_options = copy.deepcopy(qchem_options)
         qchem_options["filename"] = filename + "_" + func.__name__
         qchem_options["engine"] = engine

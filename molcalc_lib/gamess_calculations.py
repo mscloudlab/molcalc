@@ -53,7 +53,9 @@ def calculate_orbitals(molobj, gamess_options):
         },
         "basis": {"gbasis": "sto", "ngauss": 3},
     }
-
+    print('\n'+80*'*')
+    print('gamess_options:', gamess_options)
+    print(80*'*'+'\n')
     calc_obj = ppqm.gamess.GamessCalculator(**gamess_options)
     try:
         results = calc_obj.calculate(molobj, calculation_options)
