@@ -17,11 +17,8 @@ def optimize_coordinates(molobj, gamess_options):
         "statpt": {"opttol": 0.0005, "nstep": 300, "projct": False},
     }
 
-    gamess_options.get("filename", None)
-
     calc_obj = ppqm.gamess.GamessCalculator(**gamess_options)
     results = calc_obj.calculate(molobj, calculation_options)
-
     properties = results[0]
 
     return properties
@@ -53,9 +50,7 @@ def calculate_orbitals(molobj, gamess_options):
         },
         "basis": {"gbasis": "sto", "ngauss": 3},
     }
-    print('\n'+80*'*')
-    print('gamess_options:', gamess_options)
-    print(80*'*'+'\n')
+
     calc_obj = ppqm.gamess.GamessCalculator(**gamess_options)
     try:
         results = calc_obj.calculate(molobj, calculation_options)

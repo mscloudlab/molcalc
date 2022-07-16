@@ -20,15 +20,19 @@ def _get_options(existing_options, tmp_path):
 
 def optimize_coordinates(molobj, qchem_options, engine='gamess'):
     orca_cmd = qchem_options.pop('orca_cmd')
+    filename = qchem_options.get("filename", "qchem_calc")
+    qchem_options["filename"] = filename + '_optimize_coordinates'
 
     if engine == 'gamess':
-        properties = gamess_calculations.optimize_coordinates(molobj, qchem_options)
+        func = gamess_calculations.optimize_coordinates
     elif engine == 'orca':
         # Re-point cmd to orca
-        qchem_options['cmd'] = orca_cmd
-        properties = orca_calculations.optimize_coordinates(molobj, qchem_options)
+        qchem_options['cmd'] = qchem_options.pop('orca_cmd')
+        func = orca_calculations.optimize_coordinates
     else:
         raise ValueError(f'Error: keyword argument engine = "{engine}" unknown.')
+
+    properties = func(molobj, qchem_options)
     return properties
 
 

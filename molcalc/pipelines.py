@@ -3,6 +3,8 @@ import datetime
 import logging
 import pathlib
 
+import pprint  # pretty print dictionaries
+
 import models
 
 import ppqm
@@ -83,8 +85,8 @@ def calculation_pipeline(molinfo, settings):
         # orca_properties = orca_calculations.optimize_coordinates(
         #     molobj, orca_options
         # )
-        properties = gamess_calculations.optimize_coordinates(
-            molobj, gamess_options
+        properties = qchem_calculations.optimize_coordinates(
+            molobj, copy.deepcopy(qchem_options)
         )
         # print('\n'+80*'*')
         # print('orca_properties:\n\t')
@@ -139,14 +141,14 @@ def calculation_pipeline(molinfo, settings):
         properties_sol,
     ) = qchem_calculations.calculate_all_properties(molobj, qchem_options)
 
-    print(80*'*')
-    print('properties_vib_orca:', properties_vib[0])
+    print('\n' + 80*'*')
+    print('properties_vib_orca:\n', pprint.pprint(properties_vib[0]))
     print()
-    print('properties_vib_gamess:', properties_vib[1])
-    print(80*'*')
-    print('properties_orb:', properties_orb)
-    print(80*'*')
-    print('properties_sol:', properties_sol)
+    print('properties_vib_gamess:\n', pprint.pprint(properties_vib[1]))
+    # print(80*'*')
+    # print('properties_orb:', properties_orb)
+    # print(80*'*')
+    # print('properties_sol:', properties_sol)
     print(80*'*' + '\n')
 
     # Check results

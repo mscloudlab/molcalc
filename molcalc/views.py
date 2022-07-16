@@ -288,7 +288,7 @@ def ajax_submitquantum(request):
         _logger.info(f"{hashkey} exists")
         return msg
 
-    # The calculation is valid and does not exists, pass to pipeline
+    # The calculation is valid and does not exist, pass to pipeline
     _logger.info(f"{hashkey} create")
 
     molecule_info = {"sdfstr": sdfstr, "molobj": molobj, "hashkey": hashkey}
