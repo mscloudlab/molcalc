@@ -85,9 +85,10 @@ def calculation_pipeline(molinfo, settings):
         # orca_properties = orca_calculations.optimize_coordinates(
         #     molobj, orca_options
         # )
-        properties = qchem_calculations.optimize_coordinates(
+        properties_opt = qchem_calculations.optimize_coordinates(
             molobj, copy.deepcopy(qchem_options)
         )
+        gamess_props_opt, orca_props_opt = properties_opt
         # print('\n'+80*'*')
         # print('orca_properties:\n\t')
         # print(orca_properties)
@@ -102,23 +103,23 @@ def calculation_pipeline(molinfo, settings):
         sdfstr = chembridge.molobj_to_sdfstr(molobj)
         _logger.error(f"{hashkey} OptimizationError", exc_info=True)
         _logger.error(sdfstr)
-        properties = None
+        gamess_props_opt = None
 
-    if properties is None:
+    if gamess_props_opt is None:
         return {
             "error": "Error g-80 - gamess optimization error",
             "message": "Error. Unable to optimize molecule",
         }, None
 
-    if "error" in properties:
+    if "error" in gamess_props_opt:
         return {
             "error": "Error g-93 - gamess optimization error known",
-            "message": properties["error"],
+            "message": gamess_props_opt["error"],
         }, None
 
     if (
-        COLUMN_COORDINATES not in properties
-        or properties[COLUMN_COORDINATES] is None
+        COLUMN_COORDINATES not in gamess_props_opt
+        or gamess_props_opt[COLUMN_COORDINATES] is None
     ):
         return {
             "error": "Error g-104 - gamess optimization error",
@@ -128,9 +129,9 @@ def calculation_pipeline(molinfo, settings):
     _logger.info(f"{hashkey} OptimizationSuccess")
 
     # Save and set coordinates
-    coord = properties[ppqm.constants.COLUMN_COORDINATES]
+    coord = gamess_props_opt[ppqm.constants.COLUMN_COORDINATES]
     calculation.coordinates = misc.save_array(coord)
-    calculation.enthalpy = properties[ppqm.constants.COLUMN_ENERGY]
+    calculation.enthalpy = gamess_props_opt[ppqm.constants.COLUMN_ENERGY]
     chembridge.molobj_set_coordinates(molobj, coord)
 
     # Optimization is finished, do other calculation async-like
@@ -141,10 +142,12 @@ def calculation_pipeline(molinfo, settings):
         properties_sol,
     ) = qchem_calculations.calculate_all_properties(molobj, qchem_options)
 
+    gamess_props_vib, orca_props_vib = properties_vib
+    gamess_props_orb, orca_props_orb = properties_orb
     print('\n' + 80*'*')
-    print('properties_vib_orca:\n', pprint.pprint(properties_vib[0]))
+    print('properties_vib_orca:\n', pprint.pprint(orca_props_vib))
     print()
-    print('properties_vib_gamess:\n', pprint.pprint(properties_vib[1]))
+    print('properties_vib_gamess:\n', pprint.pprint(gamess_props_vib))
     # print(80*'*')
     # print('properties_orb:', properties_orb)
     # print(80*'*')
@@ -153,7 +156,7 @@ def calculation_pipeline(molinfo, settings):
 
     # Check results
 
-    if properties_vib is None or "error" in properties_vib:
+    if gamess_props_vib is None or "error" in gamess_props_vib:
         return {
             "error": "Error g-104 - gamess vibration error",
             "message": "Error. Unable to vibrate molecule",
@@ -162,21 +165,21 @@ def calculation_pipeline(molinfo, settings):
     _logger.info(f"{hashkey} VibrationSuccess")
 
     # TODO Make a custom reader and move this out of ppqm
-    calculation.islinear = properties_vib["linear"]
-    calculation.vibjsmol = properties_vib["jsmol"]
-    calculation.vibfreq = misc.save_array(properties_vib["freq"])
-    calculation.vibintens = misc.save_array(properties_vib["intens"])
-    calculation.thermo = misc.save_array(properties_vib["thermo"])
+    calculation.islinear = gamess_props_vib["linear"]
+    calculation.vibjsmol = gamess_props_vib["jsmol"]
+    calculation.vibfreq = misc.save_array(gamess_props_vib["freq"])
+    calculation.vibintens = misc.save_array(gamess_props_vib["intens"])
+    calculation.thermo = misc.save_array(gamess_props_vib["thermo"])
 
-    if properties_orb is None or "error" in properties_orb:
+    if gamess_props_orb is None or "error" in gamess_props_orb:
         return {
             "error": "Error g-128 - gamess orbital error",
             "message": "Error. Unable to calculate molecular orbitals",
         }, None
 
     _logger.info(f"{hashkey} OrbitalsSuccess")
-    calculation.orbitals = misc.save_array(properties_orb["orbitals"])
-    calculation.orbitalstxt = properties_orb["stdout"]
+    calculation.orbitals = misc.save_array(gamess_props_orb["orbitals"])
+    calculation.orbitalstxt = gamess_props_orb["stdout"]
 
     if properties_sol is None or "error" in properties_sol:
 

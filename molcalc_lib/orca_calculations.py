@@ -69,7 +69,13 @@ def calculate_orbitals(molobj, gamess_options):
         'HF-3c': None
     }
 
-    calc_obj = ppqm.gamess.GamessCalculator(**gamess_options)
+    # Remove GAMESS options that ppqm.orca.OrcaCalculator doesn't expect
+    orca_options.pop('gamess_scr', None)
+    orca_options.pop('gamess_userscr', None)
+    orca_options.pop('method_options', None)
+    options_prime = _get_options(orca_options, '/home/cloudlab/scratch/orca/')
+
+    calc_obj = ppqm.orca.OrcaCalculator(**options_prime)
     try:
         results = calc_obj.calculate(molobj, calculation_options)
         properties = results[0]
