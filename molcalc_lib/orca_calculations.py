@@ -42,6 +42,7 @@ def calculate_vibrations(molobj, orca_options):
     # Vibrate molecule
     calculation_options = {
         'pm3': None,
+        # 'Opt': None,
         'NumFreq': None
     }
 
@@ -51,9 +52,29 @@ def calculate_vibrations(molobj, orca_options):
     orca_options.pop('method_options', None)
     options_prime = _get_options(orca_options, '/home/cloudlab/scratch/orca/')
 
-
     calc_obj = ppqm.orca.OrcaCalculator(**options_prime)
     results = calc_obj.calculate(molobj, calculation_options)
     properties = results[0]
+
+    return properties
+
+
+def calculate_orbitals(molobj, gamess_options):
+
+    # See https://sites.google.com/site/orcainputlibrary/semiempirical-methods
+    # for info on the Grimme's 3-corrected Hartree-Fock method. This is being
+    # used here as an effective replacement for the semiempirical "STO" method
+    # used for the corresponding calculate_orbitals using GAMESS
+    calculation_options = {
+        'HF-3c': None
+    }
+
+    calc_obj = ppqm.gamess.GamessCalculator(**gamess_options)
+    try:
+        results = calc_obj.calculate(molobj, calculation_options)
+        properties = results[0]
+    except TypeError:
+        properties = dict()
+        properties["error"] = "Failed orbital calculation"
 
     return properties

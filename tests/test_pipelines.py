@@ -36,6 +36,23 @@ def test_pipelines():
    -0.7500    0.0000    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0
   1  2  3  0
 M  END """
+#
+#     sdf = """
+#
+#
+#   5  4  0  0  0  0  0  0  0  0999 V2000
+#     0.0000   -0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+#     0.0000   -0.8900   -0.6293 H   0  0  0  0  0  0  0  0  0  0  0  0
+#     0.0000    0.8900   -0.6293 H   0  0  0  0  0  0  0  0  0  0  0  0
+#    -0.8900   -0.0000    0.6293 H   0  0  0  0  0  0  0  0  0  0  0  0
+#     0.8900   -0.0000    0.6293 H   0  0  0  0  0  0  0  0  0  0  0  0
+#   1  2  1  0  0  0  0
+#   1  3  1  0  0  0  0
+#   1  4  1  0  0  0  0
+#   1  5  1  0  0  0  0
+# M  END
+# $$$$
+#     """
 
     # smi = "N#N"
     # molobj = Chem.MolFromSmiles(smi)
@@ -51,6 +68,11 @@ M  END """
     results = pipelines.calculation_pipeline(molecule_info, settings)
 
     print(results)
+
+    # Necessary to ensure that pytest doesn't pass when calculation_pipeline()
+    #   returns with an error message
+    # msg, calculation = results
+    # assert 'error' not in msg #and calculation is not None
 
     return
 

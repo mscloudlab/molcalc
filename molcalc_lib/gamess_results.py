@@ -83,10 +83,12 @@ def view_gamess_calculation(calculation):
 
     # Vibrational Frequencies format
     data["vibfreq"] = misc.load_array(data["vibfreq"])
-    islinear = int(data["islinear"]) == int(1)
-    offset = 5
-    if not islinear:
-        offset = 6
+
+    # TODO[MScl] Possible to simply check len(data["vibfreq"])?
+    #  E.g., if length > 6, ignore the first six values?
+    islinear = len(data["vibfreq"]) == 6
+    # islinear = int(data["islinear"]) == int(1)
+    offset = 6 if (not islinear) else 5
     data["vibfreq"] = data["vibfreq"][offset:]
     data["vibfreq"] = [fmt.format(x) for x in data["vibfreq"]]
     data["viboffset"] = offset
