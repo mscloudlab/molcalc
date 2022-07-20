@@ -151,8 +151,6 @@ def calculation_pipeline(molinfo, settings):
     print('properties_vib_gamess:\n', pprint.pprint(gamess_props_vib))
     # print(80*'*')
     # print('properties_orb:', properties_orb)
-    # print(80*'*')
-    # print('properties_sol:', properties_sol)
     print(80*'*' + '\n')
 
     # Check results
@@ -166,6 +164,8 @@ def calculation_pipeline(molinfo, settings):
     _logger.info(f"{hashkey} VibrationSuccess")
 
     # TODO Make a custom reader and move this out of ppqm
+
+    ###########################################################################
     # GAMESS vibrational calculation
     #   Note: IR intensities in DEBYE**2/AMU-ANGSTROM**2
     calculation.islinear = gamess_props_vib["linear"]
@@ -174,21 +174,20 @@ def calculation_pipeline(molinfo, settings):
     calculation.vibintens = misc.save_array(gamess_props_vib["intens"])
     calculation.thermo = misc.save_array(gamess_props_vib["thermo"])
 
-    # Orca vibrational calculation
+    #--- Orca vibrational calculation -----------------------------------------
     vib_freq = np.array(orca_props_vib["vibrational_frequencies"])
-    # Check if molecule is linear. It's linear if the array of vibrational
-    # frequencies is:
-    #   * Length 6 or less (i.e., at least one degenerate rotational DOF) OR
-    #   * Any of the first 6 values AREN'T zero
-    if len(vib_freq) <= 6 or np.any(vib_freq[:6]):
-        calculation.islinear = orca_props_vib["linear"]
+    islinear = len(vib_freq) <= 6 or np.any(vib_freq[:6])
+    # TODO Think about whether "islinear" can be set by ppqm for Orca
+    # TODO Deal with "vibjsmol" used by Jmol for vibration animations
+    # TODO Use IR intensity data (not currently used anywhere by molcalc)
+    # TODO Calculate heat capacities for thermo table
+    # TODO Decide where to put "_make_thermo_table()" (ppqm vs. molcalc)
+    calculation.islinear = islinear
     # calculation.vibjsmol = orca_props_vib["jsmol"]
     calculation.vibfreq = misc.save_array(vib_freq)
-    # TODO Use IR intensity data (not currently used anywhere by molcalc)
     # calculation.vibintens = misc.save_array(orca_props_vib["intens"])
-
-    # TODO Move "_make_thermo_table()" added to ppqm to this module
-    # calculation.thermo = misc.save_array(orca_props_vib["thermo"])
+    calculation.thermo = misc.save_array(_make_thermo_table(orca_props_vib))
+    ###########################################################################
 
     if gamess_props_orb is None or "error" in gamess_props_orb:
         return {
@@ -239,6 +238,42 @@ def calculation_pipeline(molinfo, settings):
     calculation.created = datetime.datetime.now()
 
     return msg, calculation
+
+
+def _make_thermo_table(properties):
+    """Organize free_energies dictionary into thermo table"""
+    energy_keymap = {
+        'internal_energy': 0,
+        'enthalpy': 1,
+        'gibbs_free_energy': 2,
+        'heat_capacity_v': 3,
+        'heat_capacity_p': 4,
+        'entropy': 5
+    }
+    en_component_keymap = {
+        'elect': 0,
+        'trans': 1,
+        'rotat': 2,
+        'vibra': 3,
+        'total': 4,
+        'zpe': 5
+    }
+    thermo_dict = {k: v for k, v in properties.items() if k in energy_keymap.keys()}
+
+    thermo = np.zeros((5, 6))
+    for en_name, en_dict in thermo_dict.items():
+        j = energy_keymap.get(en_name, None)
+        if j is None:
+            raise ValueError('No named free energies found.')
+        for key, value in en_dict.items():
+            i = en_component_keymap.get(key, None)
+            if i < 5:
+                thermo[i, j] = value
+            elif i == 5:
+                pass
+            else:
+                raise ValueError(f'No energy component "{key}" in "{en_name}"')
+    return thermo
 
 
 def update_smiles_counter(request, smiles):
