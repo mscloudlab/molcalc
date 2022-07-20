@@ -3,6 +3,7 @@ import datetime
 import logging
 import pathlib
 
+import numpy as np
 import pprint  # pretty print dictionaries
 
 import models
@@ -165,11 +166,29 @@ def calculation_pipeline(molinfo, settings):
     _logger.info(f"{hashkey} VibrationSuccess")
 
     # TODO Make a custom reader and move this out of ppqm
+    # GAMESS vibrational calculation
+    #   Note: IR intensities in DEBYE**2/AMU-ANGSTROM**2
     calculation.islinear = gamess_props_vib["linear"]
     calculation.vibjsmol = gamess_props_vib["jsmol"]
     calculation.vibfreq = misc.save_array(gamess_props_vib["freq"])
     calculation.vibintens = misc.save_array(gamess_props_vib["intens"])
     calculation.thermo = misc.save_array(gamess_props_vib["thermo"])
+
+    # Orca vibrational calculation
+    vib_freq = np.array(orca_props_vib["vibrational_frequencies"])
+    # Check if molecule is linear. It's linear if the array of vibrational
+    # frequencies is:
+    #   * Length 6 or less (i.e., at least one degenerate rotational DOF) OR
+    #   * Any of the first 6 values AREN'T zero
+    if len(vib_freq) <= 6 or np.any(vib_freq[:6]):
+        calculation.islinear = orca_props_vib["linear"]
+    # calculation.vibjsmol = orca_props_vib["jsmol"]
+    calculation.vibfreq = misc.save_array(vib_freq)
+    # TODO Use IR intensity data (not currently used anywhere by molcalc)
+    # calculation.vibintens = misc.save_array(orca_props_vib["intens"])
+
+    # TODO Move "_make_thermo_table()" added to ppqm to this module
+    # calculation.thermo = misc.save_array(orca_props_vib["thermo"])
 
     if gamess_props_orb is None or "error" in gamess_props_orb:
         return {

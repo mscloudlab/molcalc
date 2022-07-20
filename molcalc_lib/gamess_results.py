@@ -86,7 +86,9 @@ def view_gamess_calculation(calculation):
 
     # TODO[MScl] Possible to simply check len(data["vibfreq"])?
     #  E.g., if length > 6, ignore the first six values?
-    islinear = len(data["vibfreq"]) == 6
+    # NOTE: Using CO2 as a more complicated linear molecule than N2 makes the
+    #   validity of this approach less clear.
+    islinear = len(data["vibfreq"]) == 6  # This doesn't work
     # islinear = int(data["islinear"]) == int(1)
     offset = 6 if (not islinear) else 5
     data["vibfreq"] = data["vibfreq"][offset:]

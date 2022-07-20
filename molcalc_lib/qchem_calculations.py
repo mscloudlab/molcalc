@@ -59,9 +59,9 @@ def calculate_orbitals(molobj, qchem_options, engine='gamess'):
         properties_gamess = gamess_calculations.calculate_orbitals(molobj, qchem_options)
         properties_orca = None
     elif engine == 'orca':
-        properties_gamess = gamess_calculations.calculate_vibrations(molobj, qchem_options)
+        properties_gamess = gamess_calculations.calculate_orbitals(molobj, qchem_options)
         qchem_options['cmd'] = orca_cmd  # Re-point cmd to orca
-        properties_orca = orca_calculations.calculate_vibrations(molobj, qchem_options)
+        properties_orca = orca_calculations.calculate_orbitals(molobj, qchem_options)
     else:
         raise ValueError(f'Error: keyword argument engine = "{engine}" unknown.')
     return properties_gamess, properties_orca

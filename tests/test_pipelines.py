@@ -28,6 +28,7 @@ def test_pipelines():
 
     print(settings)
 
+    # Diatomic nitrogen
     sdf = """
 
 
@@ -36,7 +37,20 @@ def test_pipelines():
    -0.7500    0.0000    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0
   1  2  3  0
 M  END """
-#
+
+    # Carbon dioxide
+    sdf = """
+
+
+  3  2  0     0  0            999 V2000
+    3.8434  -32.8314    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    3.8434  -31.8314    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    3.8434  -30.8314    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  2  0     0  0
+  2  3  2  0     0  0
+M  END """
+
+#     # Methane
 #     sdf = """
 #
 #
@@ -50,9 +64,7 @@ M  END """
 #   1  3  1  0  0  0  0
 #   1  4  1  0  0  0  0
 #   1  5  1  0  0  0  0
-# M  END
-# $$$$
-#     """
+# M  END """
 
     # smi = "N#N"
     # molobj = Chem.MolFromSmiles(smi)
