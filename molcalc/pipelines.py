@@ -63,40 +63,20 @@ def calculation_pipeline(molinfo, settings):
         "scr": hashdir,
         "filename": hashkey,
     }
-
     qchem_options = copy.deepcopy(gamess_options)
     qchem_options['orca_cmd'] = settings['orca.cmd']
+
+    print(settings['orca.cmd'])
 
     # TODO Add error messages when gamess fails
     # TODO add timeouts for all gamess calls
 
     # Optimize molecule
     try:
-        # software_to_use = 'orca'
-        # match software_to_use:
-        #     case 'orca':
-        #         print('Hello, trying to use Orca!')
-        #         properties = orca_calculations.optimize_coordinates(
-        #             molobj, orca_options
-        #         )
-        #     case _:
-        #         properties = gamess_calculations.optimize_coordinates(
-        #             molobj, gamess_options
-        #         )
-        # orca_properties = orca_calculations.optimize_coordinates(
-        #     molobj, orca_options
-        # )
         properties_opt = qchem_calculations.optimize_coordinates(
             molobj, copy.deepcopy(qchem_options)
         )
         gamess_props_opt, orca_props_opt = properties_opt
-        # print('\n'+80*'*')
-        # print('orca_properties:\n\t')
-        # print(orca_properties)
-        # print('\n'+80*'*')
-        # print('properties:\n\t')
-        # print(properties)
-        # print(80*'*')
     except Exception:
         # TODO Logger + rich should store these exceptions somewhere. One file
         # per exception for easy debugging.
@@ -170,11 +150,11 @@ def calculation_pipeline(molinfo, settings):
     #--- Orca vibrational calculation -----------------------------------------
     vib_freq = np.array(orca_props_vib["vibrational_frequencies"])
     islinear = len(vib_freq) <= 6 or np.any(vib_freq[:6])
-    # TODO Think about whether "islinear" can be set by ppqm for Orca
-    # TODO Deal with "vibjsmol" used by Jmol for vibration animations
-    # TODO Use IR intensity data (not currently used anywhere by molcalc)
-    # TODO Calculate heat capacities for thermo table
-    # TODO Decide where to put "_make_thermo_table()" (ppqm vs. molcalc)
+    # TODO[MScl] Think about whether "islinear" can be set by ppqm for Orca
+    # TODO[MScl] Deal with "vibjsmol" used by Jmol for vibration animations
+    # TODO[MScl] Use IR intensity data (not currently used anywhere by molcalc)
+    # TODO[MScl] Calculate heat capacities for thermo table
+    # TODO[MScl] Decide where to put "_make_thermo_table()" (ppqm vs. molcalc)
     calculation.islinear = islinear
     # calculation.vibjsmol = orca_props_vib["jsmol"]
     calculation.vibfreq = misc.save_array(vib_freq)
@@ -279,12 +259,14 @@ def _make_thermo_table(properties):
             raise ValueError('No named free energies found.')
         for key, value in en_dict.items():
             i = en_component_keymap.get(key, None)
-            if i < 5:
+            if i < 4:
                 thermo[i, j] = value
-            elif i == 5:
+            elif (i == 4) or (i == 5):
                 pass
             else:
                 raise ValueError(f'No energy component "{key}" in "{en_name}"')
+    for i in range(thermo.shape[0]):
+        thermo[i, 4] = thermo[i, 1:4].sum()
     return thermo
 
 
