@@ -190,8 +190,6 @@ def ajax_submitquantum(request):
 
     settings = request.registry.settings
 
-    print(settings)
-
     # Check if user is someone who is a know misuser
     user_ip = request.remote_addr
     if (

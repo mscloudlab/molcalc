@@ -65,7 +65,7 @@ def calculation_pipeline(molinfo, settings):
     }
 
     qchem_options = copy.deepcopy(gamess_options)
-    qchem_options['orca_cmd'] = settings['orca_cmd']
+    qchem_options['orca_cmd'] = settings['orca.cmd']
 
     # TODO Add error messages when gamess fails
     # TODO add timeouts for all gamess calls
@@ -145,13 +145,6 @@ def calculation_pipeline(molinfo, settings):
 
     gamess_props_vib, orca_props_vib = properties_vib
     gamess_props_orb, orca_props_orb = properties_orb
-    print('\n' + 80*'*')
-    print('properties_vib_orca:\n', pprint.pprint(orca_props_vib))
-    print()
-    print('properties_vib_gamess:\n', pprint.pprint(gamess_props_vib))
-    # print(80*'*')
-    # print('properties_orb:', properties_orb)
-    print(80*'*' + '\n')
 
     # Check results
 
@@ -186,7 +179,26 @@ def calculation_pipeline(molinfo, settings):
     # calculation.vibjsmol = orca_props_vib["jsmol"]
     calculation.vibfreq = misc.save_array(vib_freq)
     # calculation.vibintens = misc.save_array(orca_props_vib["intens"])
-    calculation.thermo = misc.save_array(_make_thermo_table(orca_props_vib))
+    thermo = _make_thermo_table(orca_props_vib)
+    calculation.thermo = misc.save_array(thermo)
+
+
+
+
+
+    print('\n' + 80*'*')
+    keys_to_print = ['vibrational_frequencies']
+    orca_vib_print = {k: v for k, v in orca_props_vib.items() if k in keys_to_print}
+    print('properties_vib_orca:\n', pprint.pprint(orca_vib_print))
+    print(thermo)
+    print()
+    keys_to_print = ['freq', 'thermo']
+    gamess_vib_print = {k: v for k, v in gamess_props_vib.items() if k in keys_to_print}
+    print('properties_vib_gamess:\n', pprint.pprint(gamess_vib_print))
+    # print(80*'*')
+    # print('properties_orb:', properties_orb)
+    print(80*'*' + '\n')
+
     ###########################################################################
 
     if gamess_props_orb is None or "error" in gamess_props_orb:
