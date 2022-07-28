@@ -11,7 +11,7 @@ import models
 import ppqm
 from molcalc_lib import gamess_calculations, qchem_calculations
 from ppqm import chembridge, misc
-from ppqm.constants import COLUMN_COORDINATES
+from ppqm.constants import COLUMN_COORDINATES, COLUMN_ENERGY
 
 _logger = logging.getLogger("molcalc:pipe")
 
@@ -110,9 +110,9 @@ def calculation_pipeline(molinfo, settings):
     _logger.info(f"{hashkey} OptimizationSuccess")
 
     # Save and set coordinates
-    coord = gamess_props_opt[ppqm.constants.COLUMN_COORDINATES]
+    coord = gamess_props_opt[COLUMN_COORDINATES]
     calculation.coordinates = misc.save_array(coord)
-    calculation.enthalpy = gamess_props_opt[ppqm.constants.COLUMN_ENERGY]
+    calculation.enthalpy = gamess_props_opt[COLUMN_ENERGY]
     chembridge.molobj_set_coordinates(molobj, coord)
 
     # Optimization is finished, do other calculation async-like
