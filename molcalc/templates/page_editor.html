@@ -92,7 +92,7 @@ $$$$
         {% include 'section_menu.html' %}
 
         <section class="mc-footer">
-            <p>Problems? Submit issues to <a href="https://github.com/jensengroup/molcalc">github.com/jensengroup/molcalc</a></p>
+            <p>Problems? Submit issues to <a href="https://github.com/mscloudlab/molcalc">github.com/mscloudlab/molcalc</a></p>
         </section>
 
         <!-- content -->
@@ -151,7 +151,17 @@ $$$$
 
 
             <section class="toolset quantum">
+                <h2>Electronic structure calculation</h2>
+
 				<!-- <h2 class="toggle&#45;desktop">Calculate properties</h2> -->
+                <ul>
+                    <!-- Note that the 'href="#"' appears to be necessary for highlighting
+                     keeping the selected button highlighted
+                     -->
+                    <li><a rel="pm3" href="#" class="button theory active">PM3</a></li>
+<!--                    <li><a rel="pm6" href="#" class="button theory">PM6</a></li>-->
+                    <li><a rel="am1" href="#" class="button theory">AM1</a></li>
+                </ul>
                 <ul class="bottombar">
 
                     <li><a href="#" class="button quantum highlight">Calculate Properties</a></li>

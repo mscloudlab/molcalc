@@ -215,6 +215,74 @@ $('.toolset .load_water').click(function () {
     return false;
 });
 
+///////////////////////////////////////////////////////////////////////////////
+// Select theory level for quantum chemistry
+///////////////////////////////////////////////////////////////////////////////
+function getTheoryLevel() {
+    var lvl = $('.toolset.quantum .button.theory.active').attr('rel');
+    return lvl;
+}
+
+//-----------------------------------------------------------------------------
+//var theoryBtns = $('.toolset.quantum .button.theory');
+$('.button.theory').click(function() {
+
+    if( $(this).hasClass('active') ) {
+        return false;
+    }
+
+    $('.toolset.quantum .button.theory.active').removeClass('active');
+    $(this).addClass('active');
+
+    return false;
+});
+
+//-----------------------------------------------------------------------------
+//var $theoryBtns = $('.action.theory .button')
+//var $theoryBtns = $('.button.theory')
+//$theoryBtns.click(function () {
+//
+//    $that = $(this);
+//
+//    if( $that.hasClass('active') ) {
+//        return false;
+//    }
+//
+//    var lvl = $that.attr('rel');  // theory level of active button
+//
+////    $(this).removeClass('active');
+////    $('.toolset.quantum .action.theory .button.active').removeClass('active');
+//    $theoryBtns.removeClass('active');
+//
+//    switch(lvl) {
+//        case 'am1':
+//            // Do any necessary stuff for AM1
+//            $that.addClass('active');
+//            break;
+//        case 'pm3':
+//            // Do any necessary stuff for PM3
+//            $that.addClass('active');
+//            break;
+//        case 'pm6':
+//            // Do any necessary stuff for PM6
+//            $that.addClass('active');
+//            break;
+//        default:
+//            // Do any necessary stuff
+//            $that.addClass('active');
+//    }
+//
+//    return false;
+//
+//});
+
+//-----------------------------------------------------------------------------
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 // Move to quantum
 $('.button.quantum').click(function () {
@@ -236,8 +304,14 @@ $('.button.quantum').click(function () {
         if (ciEquals(currentView, "3d")){
             addHydrogens = 0
         }
+        var theoryLevel = getTheoryLevel();
 
-        var sdf_data = {sdf:mol, add_hydrogens:addHydrogens, current_view:currentView}
+        var sdf_data = {
+            sdf: mol,
+            add_hydrogens: addHydrogens,
+            current_view: currentView,
+            theory_level: theoryLevel
+        }
 
         request("/ajax/submitquantum", sdf_data, function (data)
         {

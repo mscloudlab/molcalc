@@ -107,6 +107,7 @@ class GamessCalculation(Base):
     mol2 = Column(String)
     svg = Column(String)
     coordinates = Column(String)
+    theorylvl = Column(String)
 
     # GAMESS Results
     enthalpy = Column(Float)
