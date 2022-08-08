@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 
-    <title>MolCalc</title>
+    <title>MolCalc @ ASU</title>
 
     {% include 'section_header.html' %}
 
@@ -91,9 +91,7 @@ $$$$
 
         {% include 'section_menu.html' %}
 
-        <section class="mc-footer">
-            <p>Problems? Submit issues to <a href="https://github.com/mscloudlab/molcalc">github.com/mscloudlab/molcalc</a></p>
-        </section>
+        {% include 'section_footer.html' %}
 
         <!-- content -->
 
@@ -130,13 +128,13 @@ $$$$
                 <a class="button btnSidebar menu" href="#nav">Menu</a>
             </section>
 
-            <section class="toolset tool-choice">
-                <h2></h2>
-                <ul>
-                    <li><a href="#" rel="3d" class="button icon 3d active">3D</a></li>
-                    <li><a href="#" rel="2d" class="button icon 3d">2D</a></li>
-                </ul>
-            </section>
+<!--            <section class="toolset tool-choice">-->
+<!--                <h2></h2>-->
+<!--                <ul>-->
+<!--                    <li><a href="#" rel="3d" class="button icon 3d active">3D</a></li>-->
+<!--                    <li><a href="#" rel="2d" class="button icon 3d">2D</a></li>-->
+<!--                </ul>-->
+<!--            </section>-->
 
             <section class="toolset jsmol">
                 {% include 'jsmol_toolbar.html' %}
@@ -175,9 +173,9 @@ $$$$
         <section class="mc-content">
 
 
-            <div id="editor-chemdoodle">
-                {% include 'chemtools_content.html' %}
-            </div>
+<!--            <div id="editor-chemdoodle">-->
+<!--                {% include 'chemtools_content.html' %}-->
+<!--            </div>-->
 
 
             <div id="editor-jsmol">

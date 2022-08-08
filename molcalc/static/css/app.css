@@ -948,8 +948,9 @@ input[type=text].accept {
 
     background:
         url('../img/lwm2_mg.png') no-repeat right 10px center;
+        /* https://www.asu.edu/ */
         /* url('../img/unibas_logo.jpg') no-repeat right 200px center; */
-    background-size: 150px;
+    background-size: 200px;
 }
 .mc-footer p {
 	margin: 10px 0 0 10px;
@@ -1433,7 +1434,7 @@ input[type=text].accept {
 }
 .molcalc.page .mc-content h1 {
     font-size: 30px;
-    margin: 0 0 20px 0;
+    margin: 25px 0 20px 0;
 }
 .molcalc.page .mc-content h2 {
     font-size: 20px;
@@ -1454,6 +1455,12 @@ input[type=text].accept {
     padding-left: 40px;
 }
 .molcalc.page .mc-content ul li {
+}
+
+.molcalc.page .mc-content.about p {
+    line-height: 25px;
+    margin: 0 10px 0 10px;
+    text-align: justify;
 }
 
 

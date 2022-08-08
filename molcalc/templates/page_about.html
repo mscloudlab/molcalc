@@ -2,126 +2,148 @@
 <html lang="en">
 <head>
 
-    <title>MolCalc</title>
+    <title>MolCalc @ ASU</title>
 
     {% include 'section_header.html' %}
 
 </head>
 <body>
 
-    <section class="molcalc page">
+  <section class="molcalc page">
 
-        {% include 'section_icon.html' %}
+    {% include 'section_icon.html' %}
 
-        <section class="mc-mobile-navigation toggle700 btnHeader left">
-            <a class="button icon btnSidebar" href="#nav">
-				<i class="fas fa-angle-right"></i>
+    <section class="mc-mobile-navigation toggle700 btnHeader left">
+        <a class="button icon btnSidebar" href="#nav">
+    <i class="fas fa-angle-right"></i>
+        </a>
+    </section>
+
+    {% include 'section_menu.html' %}
+
+    {% include 'section_footer.html' %}
+
+    <!-- content -->
+
+    <section class="mc-content about">
+
+        <h1>What is MolCalc?</h1>
+
+        <p>
+          MolCalc is a web-based chemistry teaching tool built originally by the
+          <a href="propka.ki.ku.dk/~jhjensen">Jensen Group</a> at the University of
+          Copenhagen and being extended by the
+          <a href="https://biopchem.education/news/yarger-research-group/">Yarger Research Group</a>
+          in the <a href="https://sms.asu.edu/">School of Molecular Sciences at Arizona State
+            University</a>
+          that allows chemists to build small molecules and estimate key molecular properties using
+          research-grade quantum chemistry software. Currently, ASU MolCalc can provide, in
+          a matter of minutes or seconds, a decent sense of the physical and chemical properties
+          of a chosen molecule, such as
+        </p>
+
+        <ul>
+            <li>energy-minimized molecular structure</li>
+            <li>electronic structure and molecular orbitals</li>
+            <li>thermochemical properties of the molecular gas form</li>
+            <li>vibrational modes and their frequencies</li>
+        </ul>
+
+        <h1>Why ASU MolCalc?</h1>
+
+        <p>
+          MolCalc was originally designed for teaching as opposed to research and, therefore, places
+            an emphasis on running computations quickly. ASU MolCalc is developed largely
+            in the same spirit and is currently intended for the upper-division
+            <a href="https://biopchem.education/biopchem/courses/">CHM 343 lab course
+            at ASU in Fall 2022</a>. However, the ASU MolCalc project has longer-term ambitions
+            driven by the central goal to improve student engagement with fundamental concepts
+            in chemistry and physics.
+        </p>
+
+
+        <h2>Emphasis on physical intuition</h2>
+
+        <p>The central focus of the broader ASU MolCalc effort is to leverage computational methods
+          to deeply integrate theoretical intuition with real or simulated experimental data using
+          clickable explanations, dynamic visualizations, and interactive data. A key point of
+          focus for development is to <i>make meaning transparent</i> using a web interface that
+          provides explanations in a visual context, allowing the user to concentrate on
+          concepts rather than deciphering complicated programs and arcane terminologies.
+        </p>
+
+        <h2>Cloud-based physics and chemistry</h2>
+
+        <p>Like the original MolCalc project, ASU MolCalc will continue being developed as an
+          open source interactive chemistry teaching tool. ASU MolCalc serves as the starting
+          point for the development of a more comprehensive visual-centric interface for
+          cloud-based physics and chemistry lab courses. The idea is to have students develop a
+          "chemical intuition" about how molecular structure affects molecular properties, without
+          performing the underlying calculations by hand (which would be near impossible for all
+          but the simplest chemical systems). In particular, we envision developing a tool that
+          establishes concrete conceptual pathways from representative experimental plots and
+          data to the mechanistic physical/chemical picture that directly underlies that data.
+        </p>
+
+        <h1>What technologies does MolCalc use?</h1>
+
+        <p>MolCalc uses standard HTML and CSS3, along with the following technologies and packages:</p>
+
+        <h2>Front-end components</h2>
+
+        <ul>
+            <li>JavaScript (<a href="https://jquery.com/">jQuery</a>)</li>
+            <li><a href="http://jmol.sourceforge.net/">JSmol</a></li>
+        </ul>
+
+        <h2>Back-end components</h2>
+
+        <ul>
+            <li>Python (<a href="https://trypyramid.com/">(Pyramid</a>)</li>
+            <li><a href="https://www.sqlalchemy.org/">SQLAlchemy</a></li>
+            <li>JavaScript (<a href="https://jquery.com/">jQuery</a>)</li>
+            <li><a href="https://www.msg.chem.iastate.edu/gamess/">GAMESS</a></li>
+            <li><a href="https://www.faccts.de/orca/">Orca</a> (coming soon!)</li>
+        </ul>
+
+        <h2>How does MolCalc perform electronic structure calculations?</h2>
+
+        <p>Great question! Currently, MolCalc currently uses
+          <a href="https://www.msg.chem.iastate.edu/gamess/">The General Atomic and Molecular
+              Electronic Structure System (GAMESS)</a>, which is maintained by the Gordon
+          research group at Iowa State University. We are also in the process of incorporating
+          <a href="https://www.faccts.de/orca/">Orca</a> as a user-selectable option for quantum
+          chemistry calculation.
+        </p>
+
+        <h1>Development</h1>
+
+        <h2>Installation</h2>
+
+        <p>Check out <a href="https://github.com/mscloudlab/molcalc">github.com/mscloudlab/molcalc
             </a>
-        </section>
+          for a developer's installation guide.
+        </p>
 
-        {% include 'section_menu.html' %}
+        <h2>I found a bug or I have a feature request</h2>
 
-        {% include 'section_footer.html' %}
+        <p>Have suggestions about how MolCalc might be improved?
+          Awesome! Raise issues at
+          <a href="https://github.com/mscloudlab/molcalc/issues">github.com/mscloudlab/molcalc
+             /issues</a>.
+        </p>
 
-        <!-- content -->
+        <h1>How do I cite MolCalc?</h1>
 
-        <section class="mc-content">
-
-            <h1>What is MolCalc?</h1>
-
-            <p>MolCalc is a web interface that allows chemist to build
-            small molecules and estimate molecular properties such as</p>
-
-            <ul>
-                <li>molecular structure</li>
-                <li>heats of formation and other thermodynamic properties</li>
-                <li>vibrational frequencies and vibrational modes</li>
-                <li>molecular orbitals and orbital energies</li>
-                <li>dipole moment and solvation surface</li>
-            </ul>
-
-            <p>in a matter of seconds or minutes - depending on the size.</p>
-
-            <p>
-            Disclaimer: MolCalc is designed for teaching as opposed to research -
-            specifically for assignments in which students build their own
-            molecules and estimate their own molecular properties.
-            It is designed to run fast and therefore estimated molecular
-            properties will not match experimental values exactly, and in some
-            cases be quite different.
-            </p>
-
-            <p>
-            The idea is to have students develop a "chemical intuition" about
-            how molecular structure affects molecular properties, without
-            performing the underlying calculations by hand (which would be near
-            impossible for all but the simplest chemical systems).
-            </p>
-
-            <h2>How do I cite MolCalc?</h2>
-
-            <p>J. H. Jensen and J. C. Kromann,<br />
-            The Molecule Calculator: A Web Application for Fast Quantum Mechanics-Based Estimation of Molecular Properties,<br />
-            J. Chem. Educ., 2013, 90 (8), pp 1093–1095. DOI: 10.1021/ed400164n<br />
-            </p>
-
-            <h2>How does MolCalc work?</h2>
-
-	    <p>
-		    For 2D compound building, we use the excellent <a href="https://web.chemdoodle.com/">web.chemdoodle.com</a> from <a href="https://chemdoodle.com">Chemdoodle</a>.
-	    </p>
-
-            <p>MolCalc uses the following technologies</p>
-
-            <p>Other than standard HTML and CSS3 we use the following technologies and packages.</p>
-
-
-            <p>Frontend uses</p>
-
-            <ul>
-                <li>JavaScript (jQuery)</li>
-                <li>JSmol</li>
-                <li>Chemdoodle</li>
-            </ul>
-
-            <p>Backend uses</p>
-
-            <ul>
-                <li>Python (Pyramid, SQLAlchemy)</li>
-                <li>JavaScript (jQuery)</li>
-                <li>GAMESS</li>
-            </ul>
-
-
-            <h2>Can I host my own version MolCalc?</h2>
-
-            <p>Yes, MolCalc is distributed through GitHub under the GPL license.
-            Download and the source from <a href="https://github.com/jensengroup/molcalc">github.com/jensengroup/molcalc</a>.</p>
-
-            <p>
-                For the quantum chemistry calculations you must obtain a copy of the GAMESS code separately from
-                <a href="https://www.msg.ameslab.gov/gamess/download.html">www.msg.ameslab.gov/gamess/download.html</a>.
-            </p>
-
-
-
-            <h2>Installation and dependencies</h2>
-
-            <p>Check out <a href="https://github.com/jensengroup/molcalc">github.com/jensengroup/molcalc</a> for installation guide.</p>
-
-
-            <h2>I found a bug or I have a feature request</h2>
-
-            <p>
-            want to contribute?
-            Want to extend the functionality of molcalc?
-            Great. Please report it at
-            <a href="https://github.com/jensengroup/molcalc/issues">github.com/jensengroup/molcalc/issues</a>.
-            </p>
-
-        </section>
+        J. H. Jensen and J. C. Kromann. <em>The Molecule Calculator: A Web
+        Application for Fast Quantum Mechanics-Based
+        Estimation of Molecular Properties,</em> J. Chem. Educ., 2013, <b>90</b>
+        (8), pp 1093–1095. DOI:
+          <a href="dx.doi.org/10.1021/ed400164n">10.1021/ed400164n<br />
 
     </section>
+
+  </section>
 
 </body>
 </html>
