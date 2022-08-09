@@ -5,7 +5,7 @@ import pathlib
 import models
 
 import ppqm
-from molcalc_lib import gamess_calculations, orca_calculations
+from molcalc_lib import gamess_calculations
 from ppqm import chembridge, misc
 from ppqm.constants import COLUMN_COORDINATES
 
@@ -14,13 +14,10 @@ _logger = logging.getLogger("molcalc:pipe")
 
 def calculation_pipeline(molinfo, settings):
     """
-
     Assumed that rdkit understands the molecule
-
     args:
         molinfo - dict
         settings -
-
     """
 
     # Read input
@@ -43,7 +40,7 @@ def calculation_pipeline(molinfo, settings):
     # Start respond message
     msg = {"smiles": smiles, "hashkey": hashkey}
 
-    atoms = chembridge.get_atoms(molobj)
+    atoms = chembridge.molobj_to_atoms(molobj)
     _logger.info(f"{hashkey} '{smiles}' {atoms}")
 
     # Create new calculation
@@ -62,25 +59,14 @@ def calculation_pipeline(molinfo, settings):
         'theory_level': theory_level
     }
 
-    orca_options = gamess_options.copy()
-    orca_options['cmd'] = '/home/cloudlab/Library/orca/4.2.1-static_ompi-3.1.4/orca'
-
     # TODO Add error messages when gamess fails
     # TODO add timeouts for all gamess calls
 
     # Optimize molecule
-    software_to_use = 'orca'
     try:
-        match software_to_use:
-            case 'orca':
-                print('Hello, trying to use Orca!')
-                properties = orca_calculations.optimize_coordinates(
-                    molobj, orca_options
-                )
-            case _:
-                properties = gamess_calculations.optimize_coordinates(
-                    molobj, gamess_options
-                )
+        properties = gamess_calculations.optimize_coordinates(
+            molobj, gamess_options
+        )
 
     except Exception:
         # TODO Logger + rich should store these exceptions somewhere. One file

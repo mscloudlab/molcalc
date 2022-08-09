@@ -12,7 +12,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 from molcalc import constants
-from molcalc_lib import gamess_results, orca_results
+from molcalc_lib import gamess_results
 from ppqm import chembridge
 
 _logger = logging.getLogger("molcalc:views")
@@ -32,9 +32,7 @@ def not_found(request):
 @view_config(route_name="editor", renderer="templates/page_editor.html")
 def editor(request):
     """
-
     Standard view for MolCalc. Static HTML.
-
     """
     return {}
 
@@ -44,9 +42,7 @@ def editor(request):
 )
 def view_calculation(request):
     """
-
     View for looking up calculations.
-
     """
 
     # Get the key
@@ -76,11 +72,8 @@ def view_calculation(request):
 )
 def view_calculations(request):
     """
-
     Statistic about current calculations? Iono, maybe not.
     Kind of destroyed the IO / browser last time
-
-
     """
     raise httpexceptions.exception_response(404)
     return {}
@@ -92,9 +85,7 @@ def view_calculations(request):
 @view_config(route_name="about", renderer="templates/page_about.html")
 def about(request):
     """
-
     static about page
-
     """
     return {}
 
@@ -102,9 +93,7 @@ def about(request):
 @view_config(route_name="help", renderer="templates/page_help.html")
 def page_help(request):
     """
-
     static help page
-
     """
     return {}
 
@@ -112,9 +101,7 @@ def page_help(request):
 @view_config(route_name="sdf_to_smiles", renderer="json")
 def ajax_sdf_to_smiles(request):
     """
-
     sdf to smiles convertion
-
     """
     return {"message", "disabled"}
 
@@ -152,9 +139,7 @@ def ajax_sdf_to_smiles(request):
 @view_config(route_name="smiles_to_sdf", renderer="json")
 def ajax_smiles_to_sdf(request):
     """
-
     convert SMILES to SDF format
-
     """
 
     return {"message", "disabled"}
@@ -183,9 +168,7 @@ def ajax_smiles_to_sdf(request):
 @view_config(route_name="submitquantum", renderer="json")
 def ajax_submitquantum(request):
     """
-
     Setup quantum calculation
-
     """
 
     settings = request.registry.settings
@@ -231,15 +214,13 @@ def ajax_submitquantum(request):
     _logger.info(f'Selected theory level: "{theory_level}"')
 
     # Get rdkit
-    # molobj, status = chembridge.sdfstr_to_molobj(sdfstr, return_status=True)
-    molobj = chembridge.sdfstr_to_molobj(sdfstr)
+    molobj, status = chembridge.sdfstr_to_molobj(sdfstr, return_status=True)
 
     if molobj is None:
-        # status = status.split("]")
-        # status = status[-1]
-        # status = re.sub(r"\# [0-9]+", "", status)
-        # return {"error": "Error 141 - rdkit error", "message": status}
-        return {"error": "Unclassified RDKit error"}
+        status = status.split("]")
+        status = status[-1]
+        status = re.sub(r"\# [0-9]+", "", status)
+        return {"error": "Error 141 - rdkit error", "message": status}
 
     try:
         molobj.GetConformer()
@@ -254,14 +235,14 @@ def ajax_submitquantum(request):
         }
 
     # If hydrogens not added, assume graph and optimize with forcefield
-    atoms = chembridge.get_atoms(molobj)
+    atoms = chembridge.molobj_to_atoms(molobj)
 
     if 1 not in atoms and add_hydrogens:
         molobj = Chem.AddHs(molobj)
         AllChem.EmbedMultipleConfs(molobj, numConfs=1)
         chembridge.molobj_optimize(molobj)
 
-    atoms = chembridge.get_atoms(molobj)
+    atoms = chembridge.molobj_to_atoms(molobj)
 
     # TODO Check lengths of atoms
     # TODO Define max in settings
