@@ -78,55 +78,55 @@ $$$$
 </head>
 <body>
 
-    <section class="molcalc editor" id="molcalc-view">
+  <section class="molcalc editor" id="molcalc-view">
 
-        {% include 'section_icon.html' %}
+    {% include 'section_icon.html' %}
 
-        <section class="mc-mobile-navigation toggle700 btnHeader left">
-            <a class="button icon btnSidebar" href="#sidebarEditor">
-				<!-- <i class="fas fa&#45;angle&#45;right"></i> -->
-				<i class="fas fa-bars"></i>
-            </a>
-        </section>
+    <section class="mc-mobile-navigation toggle700 btnHeader left">
+        <a class="button icon btnSidebar" href="#sidebarEditor">
+    <!-- <i class="fas fa&#45;angle&#45;right"></i> -->
+    <i class="fas fa-bars"></i>
+        </a>
+    </section>
 
-        {% include 'section_menu.html' %}
+    {% include 'section_menu.html' %}
 
-        {% include 'section_footer.html' %}
+    {% include 'section_footer.html' %}
 
-        <!-- content -->
+    <!-- content -->
 
-        <section class="mc-mobile-search toggle700 btnHeader right">
-            <a class="button icon" href="#searchbar">
-                <i class="fas fa-search"></i>
-            </a>
-        </section>
+    <section class="mc-mobile-search toggle700 btnHeader right">
+        <a class="button icon" href="#searchbar">
+            <i class="fas fa-search"></i>
+        </a>
+    </section>
 
-        <section class="mc-editor-searchbar">
-            <form>
-            <input type="text" placeholder="Search using molecule name or SMILES" autocomplete="off" id="searchbar" />
-            <a class="button icon">
-                <i class="fas fa-search"></i>
-            </a>
-            <span class="toggle700 searchbar-close button icon">
+    <section class="mc-editor-searchbar">
+        <form>
+        <input type="text" placeholder="Search using molecule name or SMILES" autocomplete="off" id="searchbar" />
+        <a class="button icon">
+            <i class="fas fa-search"></i>
+        </a>
+        <span class="toggle700 searchbar-close button icon">
+            <i class="fas fa-times"></i>
+        </span>
+        </form>
+    </section>
+
+
+    <section class="mc-editor-tools sidebar" id="sidebarEditor">
+
+        <section class="sidebar-cover"></section>
+        <section class="sidebar-background btnCloseSidebar" href="#sidebarEditor"></section>
+
+        <section class="sidebar-wrapper"> <!-- sidebar wrapper -->
+
+        <section class="toolset toggle700">
+            <a class="button icon btnCloseSidebar" href="#sidebarEditor">
                 <i class="fas fa-times"></i>
-            </span>
-            </form>
+            </a>
+            <a class="button btnSidebar menu" href="#nav">Menu</a>
         </section>
-
-
-        <section class="mc-editor-tools sidebar" id="sidebarEditor">
-
-            <section class="sidebar-cover"></section>
-            <section class="sidebar-background btnCloseSidebar" href="#sidebarEditor"></section>
-
-            <section class="sidebar-wrapper"> <!-- sidebar wrapper -->
-
-            <section class="toolset toggle700">
-                <a class="button icon btnCloseSidebar" href="#sidebarEditor">
-                    <i class="fas fa-times"></i>
-                </a>
-                <a class="button btnSidebar menu" href="#nav">Menu</a>
-            </section>
 
 <!--            <section class="toolset tool-choice">-->
 <!--                <h2></h2>-->
@@ -136,41 +136,41 @@ $$$$
 <!--                </ul>-->
 <!--            </section>-->
 
-            <section class="toolset jsmol">
-                {% include 'jsmol_toolbar.html' %}
-            </section>
-
-            <section class="toolset chemdoodle">
-                {% include 'chemtools_toolbar.html' %}
-            </section>
-
-
-            </section> <!-- sidebar wrapper -->
-
-
-            <section class="toolset quantum">
-                <h2>Electronic structure calculation</h2>
-
-				<!-- <h2 class="toggle&#45;desktop">Calculate properties</h2> -->
-                <ul>
-                    <!-- Note that the 'href="#"' appears to be necessary for highlighting
-                     keeping the selected button highlighted
-                     -->
-                    <li><a rel="pm3" href="#" class="button theory active">PM3</a></li>
-<!--                    <li><a rel="pm6" href="#" class="button theory">PM6</a></li>-->
-                    <li><a rel="am1" href="#" class="button theory">AM1</a></li>
-                </ul>
-                <ul class="bottombar">
-
-                    <li><a href="#" class="button quantum highlight">Calculate Properties</a></li>
-                    <li><a href="#" class="button getName">Get name</a></li>
-                </ul>
-            </section>
-
-
+        <section class="toolset jsmol">
+            {% include 'jsmol_toolbar.html' %}
         </section>
 
-        <section class="mc-content">
+        <section class="toolset chemdoodle">
+            {% include 'chemtools_toolbar.html' %}
+        </section>
+
+
+        </section> <!-- sidebar wrapper -->
+
+
+        <section class="toolset quantum">
+            <h2>Electronic structure calculation</h2>
+
+    <!-- <h2 class="toggle&#45;desktop">Calculate properties</h2> -->
+            <ul>
+                <!-- Note that the 'href="#"' appears to be necessary for highlighting
+                 keeping the selected button highlighted
+                 -->
+                <li><a rel="pm3" href="#" class="button theory active">PM3</a></li>
+<!--                    <li><a rel="pm6" href="#" class="button theory">PM6</a></li>-->
+                <li><a rel="am1" href="#" class="button theory">AM1</a></li>
+            </ul>
+            <ul class="bottombar">
+
+                <li><a href="#" class="button quantum highlight">Calculate Properties</a></li>
+                <li><a href="#" class="button getName">Get name</a></li>
+            </ul>
+        </section>
+
+
+    </section>
+
+    <section class="mc-content">
 
 
 <!--            <div id="editor-chemdoodle">-->
@@ -178,14 +178,14 @@ $$$$
 <!--            </div>-->
 
 
-            <div id="editor-jsmol">
-                {% include 'jsmol_content.html' %}
-            </div>
-
-        </section>
-
+        <div id="editor-jsmol">
+            {% include 'jsmol_content.html' %}
+        </div>
 
     </section>
+
+
+  </section>
 
 	<section class="hidden">
 
