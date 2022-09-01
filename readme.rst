@@ -70,17 +70,24 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     cd molecalc
 
 
-2. Create the Python environment using `conda` and `pip`.
+2. Create the Python environment using `conda` and `pip` and the provided
+   `environment.yml` and `requirements.txt` files.
 
 .. code-block:: bash
 
     # make env chemhelp
     conda env create -f environment.yml -p env
     pip install -r requirements.txt
+
+3. Install `molecalc` in `./env` and `ppqm` locally in the molecalc directory:
+
+.. code-block:: bash
+
+    pip install -e .
     git clone https://github.com/ppqm/ppqm ppqm.git --depth 1
     ln -s ppqm.git/ppqm ppqm
 
-3. Download the JavaScript and frontend libraries, using the scripts.
+4. Download the JavaScript and frontend libraries, using the scripts.
    You need `unzip` and `wget` installed.
    All JavaScript libraries will be installed in the `molcalc/static` folder.
 
@@ -93,13 +100,13 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     bash scripts/setup_jquery.sh
     bash scripts/setup_rdkit.sh
 
-4. Setup GAMESS_. You need to download and `compile GAMESS`__.
+5. Set up GAMESS. You need to download_ and `compile GAMESS`__.
 
 
-.. _GAMESS: https://www.msg.chem.iastate.edu/gamess/download.html
+.. _download: https://www.msg.chem.iastate.edu/gamess/download.html
 .. __: http://computerandchemistry.blogspot.com/2014/02/compiling-and-setting-up-gamess.html
 
-5. Setup configuration by copying the example and edit.
+6. Setup configuration by copying the example and edit.
    Especially note to edit the GAMESS section to reflect the setup of your setup.
 
 .. code-block:: bash
@@ -108,7 +115,7 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     # edit development.ini
 
 
-6. Test. Use the unittest to check that the configuration for GAMESS is setup correctly
+7. Test. Use the unittest to check that the configuration for GAMESS is setup correctly
 
 .. code-block:: bash
 
@@ -116,7 +123,7 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     python -m pytest tests
 
 
-7. You are ready. Serve the server by
+8. You are ready. Serve the server by
 
 .. code-block:: bash
 

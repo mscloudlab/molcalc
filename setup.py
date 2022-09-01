@@ -9,7 +9,7 @@ with open(os.path.join(here, 'requirements.txt')) as f:
 setup(
     name='molcalc',
     version='0.0',
-    description='MolCalc',
+    description='MoleCalc',
     author='',
     author_email='',
     url='',
