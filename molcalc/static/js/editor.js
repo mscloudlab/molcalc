@@ -369,7 +369,7 @@ $('.button.getName').click(function () {
 
         var promptCactus = new $.Prompt();
         promptCactus.setMessage(name);
-        promptCactus.addCancelBtn("Thanks");
+        promptCactus.addCancelBtn("OK");
         promptCactus.show();
 
         promptWait.cancel();

@@ -79,13 +79,15 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     conda env create -f environment.yml -p env
     pip install -r requirements.txt
 
+
 3. Install `molecalc` in `./env` and `ppqm` locally in the molecalc directory:
 
 .. code-block:: bash
 
     pip install -e .
-    git clone https://github.com/ppqm/ppqm ppqm.git --depth 1
+    git clone --branch main git@github.com:mscloudlab/ppqm.git ppqm.git
     ln -s ppqm.git/ppqm ppqm
+
 
 4. Download the JavaScript and frontend libraries, using the scripts.
    You need `unzip` and `wget` installed.
@@ -100,14 +102,21 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     bash scripts/setup_jquery.sh
     bash scripts/setup_rdkit.sh
 
-5. Set up GAMESS. You need to download_ and `compile GAMESS`__.
 
+5. Set up GAMESS. You need to download_ and `compile GAMESS`__.
 
 .. _download: https://www.msg.chem.iastate.edu/gamess/download.html
 .. __: http://computerandchemistry.blogspot.com/2014/02/compiling-and-setting-up-gamess.html
 
-6. Setup configuration by copying the example and edit.
-   Especially note to edit the GAMESS section to reflect the setup of your setup.
+
+6. Set up the PasteDeploy configuration (`*.ini` file) by copying the example
+   and editing the `[scr]` and `[gamess]` sections to reflect the corresponding
+   (`csh`) variables `SCR`, `USERSCR`, and `GMSPATH` specified in your `rungms`
+   script.
+   One might opt to create a copy of `rungms` (say, `molcalc_rungms`) so as to
+   specify different scratch directories to be used when GAMESS is run by
+   MoleCalc; in this case, the `rungms` variable in the `[gamess]` section of
+   your `*.ini` file should point to this new copy (`molcalc_rungms`).
 
 .. code-block:: bash
 
@@ -115,7 +124,8 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     # edit development.ini
 
 
-7. Test. Use the unittest to check that the configuration for GAMESS is setup correctly
+7. Test using `pytest` to check that the configuration for GAMESS is set up
+   correctly
 
 .. code-block:: bash
 
@@ -123,14 +133,17 @@ with the Python environment we can setup MoleCalc. Note that most of the steps a
     python -m pytest tests
 
 
-8. You are ready. Serve the server by
+8. MoleCalc should be ready. Serve the server by
 
 .. code-block:: bash
 
     # make serve
     env/bin/pserve development.ini --reload
 
-MoleCalc should now be available on ``localhost:6543``, based on the settings of development.ini.
+
+9. In your favorite browser, type ``localhost:6543`` (or whatever
+   corresponding ip/port was specified in `development.ini`) in the URL bar
+   and have fun!
 
 
 Dependencies
@@ -184,7 +197,7 @@ If rdkit has problems finding `libxrender.so` then you need to install
 
 .. code-block:: bash
 
-    apt install -y libxrender-dev
+    sudo apt install libxrender-dev
 
 or
 

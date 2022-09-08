@@ -403,7 +403,7 @@ function jsmolSetMol(canvasObj, molStr)
 {
     // http://wiki.jmol.org/index.php/File_formats/Chemical_Structure
 
-    jsmolCmd(canvasObj, "load inline '"+molStr+"'");
+    jsmolCmd(canvasObj, "load inline '"+molStr+"'; zoom 75");
     // jsmolCmd(canvasObj, "minimize addHydrogens");
 
     return false;

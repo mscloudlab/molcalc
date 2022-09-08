@@ -4,10 +4,11 @@ import pathlib
 
 import models
 
-import ppqm
+import numpy as np
+
 from molcalc_lib import gamess_calculations
 from ppqm import chembridge, misc
-from ppqm.constants import COLUMN_COORDINATES
+from ppqm.constants import COLUMN_COORDINATES, COLUMN_ENERGY
 
 _logger = logging.getLogger("molcalc:pipe")
 
@@ -66,19 +67,30 @@ def calculation_pipeline(molinfo, settings):
     # TODO add timeouts for all gamess calls
 
     # Optimize molecule
-    try:
-        properties = gamess_calculations.optimize_coordinates(
-            molobj, gamess_options
-        )
-
-    except Exception:
-        # TODO Logger + rich should store these exceptions somewhere. One file
-        # per exception for easy debugging.
-        # TODO Should store SDF of the molecule if exception
-        sdfstr = chembridge.molobj_to_sdfstr(molobj)
-        _logger.error(f"{hashkey} OptimizationError", exc_info=True)
-        _logger.error(sdfstr)
-        properties = None
+    n_atoms = len(atoms)
+    if n_atoms >= 2:
+        try:
+            properties = gamess_calculations.optimize_coordinates(
+                molobj, gamess_options
+            )
+        except Exception:
+            # TODO Logger + rich should store these exceptions somewhere. One file
+            # per exception for easy debugging.
+            # TODO Should store SDF of the molecule if exception
+            sdfstr = chembridge.molobj_to_sdfstr(molobj)
+            _logger.error(f"{hashkey} OptimizationError", exc_info=True)
+            _logger.error(sdfstr)
+            properties = None
+    elif n_atoms == 1:
+        properties = {
+            COLUMN_COORDINATES: chembridge.molobj_to_coordinates(molobj),
+            COLUMN_ENERGY: 0.0
+        }
+    else:
+        return {
+            "error": "Error - misc atom count error",
+            "message": "Error. There is not at least one atom.",
+        }, None
 
     if properties is None:
         return {
@@ -101,23 +113,37 @@ def calculation_pipeline(molinfo, settings):
             "message": "Error. Unable to optimize molecule",
         }, None
 
-    _logger.info(f"{hashkey} OptimizationSucces")
+    _logger.info(f"{hashkey} OptimizationSuccess")
 
     # Save and set coordinates
-    coord = properties[ppqm.constants.COLUMN_COORDINATES]
+    coord = properties[COLUMN_COORDINATES]
     calculation.coordinates = misc.save_array(coord)
-    calculation.enthalpy = properties[ppqm.constants.COLUMN_ENERGY]
+    calculation.enthalpy = properties[COLUMN_ENERGY]
     chembridge.molobj_set_coordinates(molobj, coord)
 
     # Optimization is finished, do other calculation async-like
-
     (
         properties_vib,
         properties_orb,
         # properties_sol,
     ) = gamess_calculations.calculate_all_properties(molobj, gamess_options)
 
+
     # Check results
+
+    # Vibrational Modes
+    # print(80*'=')
+    # print(properties_vib)
+    # print(80*'=')
+    # if n_atoms == 1:
+    #     properties_vib["linear"] = True
+    #     properties_vib["jsmol"] = ''
+    #     properties_vib["freq"] = np.zeros(6)
+    #     properties_vib["intens"] = np.zeros(6)
+    #     properties_vib["thermo"] = np.zeros((5, 6))
+    #     properties_vib["thermo"][0,:] = -1.0
+    #     properties_vib["thermo"][1,:] = -1.0
+    #     properties_vib["thermo"][4,:] = -1.0
 
     if properties_vib is None or "error" in properties_vib:
         return {
@@ -134,6 +160,7 @@ def calculation_pipeline(molinfo, settings):
     calculation.vibintens = misc.save_array(properties_vib["intens"])
     calculation.thermo = misc.save_array(properties_vib["thermo"])
 
+    # Molecular Orbitals
     if properties_orb is None or "error" in properties_orb:
         return {
             "error": "Error g-128 - gamess orbital error",
@@ -144,6 +171,7 @@ def calculation_pipeline(molinfo, settings):
     calculation.orbitals = misc.save_array(properties_orb["orbitals"])
     calculation.orbitalstxt = properties_orb["stdout"]
 
+    # Solvation and Polarity
     # if properties_sol is None or "error" in properties_sol:
     #
     #     # Is okay solvation didn't converge, just warn.

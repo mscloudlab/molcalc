@@ -20,8 +20,8 @@ myJmol1 = Jmol.getApplet("myJmol1", myInfo1);
 Jmol.script(myJmol1, 'background "#ffffff"');
 Jmol.script(myJmol1, 'set bondRadiusMilliAngstroms 100; set multipleBondSpacing -0.3');
 Jmol.script(myJmol1, 'set forcefield "MMFF"');
-jsmolSetMol(myJmol1, sdfWater);
-Jmol.script(myJmol1, 'minimize');
+jsmolSetMol(myJmol1, sdfBenzene);
+Jmol.script(myJmol1, 'minimize addHydrogens');
 </script>
 
 </div>

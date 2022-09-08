@@ -113,37 +113,37 @@ def page_help(request):
 def ajax_sdf_to_smiles(request):
     """
 
-    sdf to smiles convertion
+    sdf to smiles conversion
 
     """
     return {"message", "disabled"}
 
-    if not request.POST:
-        return {
-            "error": "Error 55 - Missing key",
-            "message": "Error. Missing information.",
-        }
-
-    try:
-        sdf = request.POST["sdf"].encode("utf-8")
-    except Exception:
-        return {
-            "error": "Error 60 - get error",
-            "message": "Error. Missing information.",
-        }
-
-    # Get smiles
-    smiles, status = chembridge.sdf_to_smiles(sdf)
-    if smiles is None:
-
-        status = status.split("]")
-        status = status[-1]
-
-        return {"error": "Error 69 - rdkit error", "message": status}
-
-    msg = {"smiles": smiles}
-
-    return msg
+    # if not request.POST:
+    #     return {
+    #         "error": "Error 55 - Missing key",
+    #         "message": "Error. Missing information.",
+    #     }
+    #
+    # try:
+    #     sdf = request.POST["sdf"].encode("utf-8")
+    # except Exception:
+    #     return {
+    #         "error": "Error 60 - get error",
+    #         "message": "Error. Missing information.",
+    #     }
+    #
+    # # Get smiles
+    # smiles, status = chembridge.sdf_to_smiles(sdf)
+    # if smiles is None:
+    #
+    #     status = status.split("]")
+    #     status = status[-1]
+    #
+    #     return {"error": "Error 69 - rdkit error", "message": status}
+    #
+    # msg = {"smiles": smiles}
+    #
+    # return msg
 
 
 # Ajax views
@@ -159,25 +159,25 @@ def ajax_smiles_to_sdf(request):
 
     return {"message", "disabled"}
 
-    if not request.POST:
-        return {
-            "error": "Error 53 - Missing key",
-            "message": "Error. Missing information.",
-        }
-
-    try:
-        smiles = request.POST["smiles"].encode("utf-8")
-    except Exception as e:
-        return {
-            "error": "Error 58 - get error",
-            "message": "Error. Missing information.",
-            "exception": f"{e}",
-        }
-
-    sdfstr = chembridge.smiles_to_sdfstr(smiles)
-    msg = {"sdf": sdfstr}
-
-    return msg
+    # if not request.POST:
+    #     return {
+    #         "error": "Error 53 - Missing key",
+    #         "message": "Error. Missing information.",
+    #     }
+    #
+    # try:
+    #     smiles = request.POST["smiles"].encode("utf-8")
+    # except Exception as e:
+    #     return {
+    #         "error": "Error 58 - get error",
+    #         "message": "Error. Missing information.",
+    #         "exception": f"{e}",
+    #     }
+    #
+    # sdfstr = chembridge.smiles_to_sdfstr(smiles)
+    # msg = {"sdf": sdfstr}
+    #
+    # return msg
 
 
 @view_config(route_name="submitquantum", renderer="json")
@@ -263,12 +263,12 @@ def ajax_submitquantum(request):
 
     # TODO Check lengths of atoms
     # TODO Define max in settings
-    max_atoms = 25
+    max_atoms = 50
     (heavy_atoms,) = np.where(atoms != 1)
     if len(heavy_atoms) > max_atoms:
         return {
             "error": "Error 194 - max atoms error",
-            "message": "Stop Casper. Max ten heavy atoms.",
+            "message": f"Stop Casper. Max {max_atoms} heavy atoms.",
         }
 
     # Fix sdfstr
@@ -281,6 +281,7 @@ def ajax_submitquantum(request):
     # Inject numerical calculation parameters (e.g., "theory_level") in
     # the generated hashkey so the existence of a calculation depends not only
     # only on the input structure but also the selected numerical inputs
+    # TODO CHECK THIS, SEAN --- this is probably causing that error with N#N
     calc_str = f'{sdfstr}\n{theory_level}'
 
     # hash on sdf (conformer)
@@ -320,7 +321,7 @@ def ajax_submitquantum(request):
 
         return {
             "error": "293",
-            "message": "Internal server server. Uncaught exception",
+            "message": "Internal server error. Uncaught exception",
         }
 
     # Add calculation to the database

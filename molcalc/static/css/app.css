@@ -318,6 +318,44 @@ table tr td.right {text-align:right;white-space: nowrap;}
 table tr td.center {text-align:center;}
 
 
+/* No button */
+.nobutton {
+    display: inline-block;
+
+    line-height:inherit;
+    user-select: none;
+    /* cursor:pointer; */
+
+    padding: 0px 70px;
+
+    border: 1px transparent;
+    border-color: #dadada;
+    border-radius: 3px;
+
+    text-decoration: none;
+    color: #222;
+    background: #ddd;
+    background: #dadada;
+
+    font-weight: 700;
+}
+
+.nobutton.noicon {
+    height: 20px;  /* Leaving this at 30px causes vertical spacing issues... */
+    width: 30px;
+    line-height: 30px;
+    padding: 0;
+    text-align: center;
+
+    font-size: 15px;
+
+    /* color: #222; */
+    /* background: #ddd; /* alt #e7e6ef */
+    /* border-color: #ddd; */
+    background: transparent;
+    border-color: transparent;
+}
+
 /* Button */
 .button {
     display: inline-block;
@@ -400,8 +438,8 @@ table tr td.center {text-align:center;}
 
 .button.highlight {
     color:#fff;
-    background: #222;
-    border-color: #222;
+    background: #333;
+    border-color: #333;
 }
 .button.highlight:hover {
     color:#fff;
@@ -1068,6 +1106,15 @@ input[type=text].accept {
     border-radius: 4px;
 }
 
+.mc-editor-tools {
+	margin: 0 0 0 10px;
+}
+
+.mc-editor-tools h1 {
+    font-size: 125%;
+	font-weight: bold;
+	margin: 25px 0 0 0;
+}
 
 .mc-editor-tools {
 	grid-area: editor;
@@ -1076,18 +1123,18 @@ input[type=text].accept {
 	margin: 10px;
 }
 .mc-editor-tools .toolset h2 {
-	margin:0 0 20px 0;
+	margin:0 0 10px 0;
 }
 .mc-editor-tools .toolset h3 {
 	margin:0 0 20px 0;
     font-weight: bold;
 }
 .mc-editor-tools .toolset ul {
-	margin: 0 0 20px 0;
+	margin: 0 0 10px 0;
 }
 .mc-editor-tools .toolset ul li {
 	display: inline-block;
-	padding: 0 5px 10px 0;
+	padding: 0 5px 7px 0;
 }
 .mc-editor-tools .toolset.quantum {
 	margin: 20px 10px;
@@ -1096,6 +1143,10 @@ input[type=text].accept {
 	text-align: left;
 }
 
+.mc-editor-tools ul li .element-row {
+	display: inline-block;
+	padding: 0 5px 5px 0;
+}
 
 /* chemdoodle */
 
